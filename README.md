@@ -8,6 +8,14 @@ Manage library holds for any III Vega / LYNX catalog system from the terminal or
 
 ---
 
+## Why this exists
+
+I love reading to my daughter. But the picture book section at the library is hit or miss — there are a lot of low-quality books mixed in, and browsing the catalog manually every week got tedious fast. I wanted a way to always have a curated set of great picture books ready to pick up, without thinking about it.
+
+The `topup` command is the heart of it: it works through the Caldecott Medal and Honor list (books recognized by librarians as the best American picture books going back to 1938), tracks which ones we've already read, and automatically fills our hold queue with ones we haven't gotten to yet. Every library trip has something worth reading.
+
+---
+
 ## Contents
 
 - [CLI](#cli)
