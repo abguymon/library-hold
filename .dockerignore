@@ -1,0 +1,11 @@
+node_modules
+web/node_modules
+web/.next
+dist
+library_hold/__pycache__
+*.pyc
+.git
+.env*
+README.md
+TASKS.md
+CLAUDE.md

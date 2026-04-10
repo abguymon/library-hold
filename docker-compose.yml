@@ -1,0 +1,64 @@
+services:
+  library-hold:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: library-hold:latest
+    restart: unless-stopped
+    environment:
+      # ── Library credentials ───────────────────────────────────────────────
+      # Required: your library card number and PIN.
+      # Once the app authenticates, tokens are cached in the config volume.
+      - LIBRARY_CARD=${LIBRARY_CARD}
+      - LIBRARY_PIN=${LIBRARY_PIN}
+
+      # ── Library-specific settings (defaults to Eagle Public Library) ──────
+      # Override for your library system:
+      - LIBRARY_DOMAIN=${LIBRARY_DOMAIN:-eagle-lynx.na3.iiivega.com}
+      - LIBRARY_HOME_CODE=${LIBRARY_HOME_CODE:-21}
+      - LIBRARY_PICKUP=${LIBRARY_PICKUP:-47}
+      - HOLD_LIMIT=${HOLD_LIMIT:-15}
+
+      # ── Book tracking ─────────────────────────────────────────────────────
+      # Where to store personal reading/tracking data inside the container.
+      # Mounted from the library-hold-data volume below.
+      - BOOKS_DATA_PATH=/data/books.json
+
+      # ── Optional: BookWyrm integration ───────────────────────────────────
+      # - BOOKWYRM_URL=${BOOKWYRM_URL:-}
+      # - BOOKWYRM_TOKEN=${BOOKWYRM_TOKEN:-}
+
+    volumes:
+      # Persistent book tracking data (read/skip status, ratings, held dates)
+      - library-hold-data:/data
+      # Auth token cache — avoids re-authenticating on every restart
+      - library-hold-config:/root/.library-hold
+
+    networks:
+      - proxy
+
+    labels:
+      - "traefik.enable=true"
+
+      # ── Router ────────────────────────────────────────────────────────────
+      # Change the Host rule to your domain
+      - "traefik.http.routers.library-hold.rule=Host(`library.example.com`)"
+      - "traefik.http.routers.library-hold.entrypoints=websecure"
+      - "traefik.http.routers.library-hold.tls=true"
+      - "traefik.http.routers.library-hold.tls.certresolver=letsencrypt"
+
+      # ── Authelia forward auth ─────────────────────────────────────────────
+      # Requires an Authelia middleware named "authelia" already defined in
+      # your Traefik dynamic config or another compose service.
+      - "traefik.http.routers.library-hold.middlewares=authelia@docker"
+
+      # ── Service port ──────────────────────────────────────────────────────
+      - "traefik.http.services.library-hold.loadbalancer.server.port=3000"
+
+volumes:
+  library-hold-data:
+  library-hold-config:
+
+networks:
+  proxy:
+    external: true

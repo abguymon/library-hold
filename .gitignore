@@ -1,0 +1,11 @@
+*.egg-info/
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/
+node_modules/
+web/node_modules/
+web/.next/
+.env*
+TASKS.md

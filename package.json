@@ -1,0 +1,28 @@
+{
+  "name": "library-hold",
+  "version": "1.0.0",
+  "description": "CLI for placing holds at III Vega/LYNX public libraries",
+  "type": "module",
+  "bin": {
+    "library-hold": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc && cp -r data dist/",
+    "dev": "tsx cli/index.ts"
+  },
+  "dependencies": {
+    "commander": "^12.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist/",
+    "data/"
+  ]
+}
